@@ -1,6 +1,7 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+BASE_URL = "https://backend-development-fundamentals-la-cyan.vercel.app"
 output_dir = r"c:\Users\vinod\Downloads\Lab-02_bdf\screenshots"
 os.makedirs(output_dir, exist_ok=True)
 
@@ -24,27 +25,26 @@ HEADER_BG = "#FAFAFA"
 BORDER = "#E0E0E0"
 TEXT_DARK = "#212121"
 TEXT_MUTED = "#757575"
-TEXT_KEY = "#A31515"     # dark red for JSON keys
-TEXT_STRING = "#005C99"  # dark blue for string values
-TEXT_NUMBER = "#098658"  # dark green for numbers
+TEXT_KEY = "#A31515"
+TEXT_STRING = "#005C99"
+TEXT_NUMBER = "#098658"
 
 METHOD_COLORS = {
-    "GET": ("#1565C0", "#E3F2FD"),       # dark blue text, light blue bg
-    "POST": ("#2E7D32", "#E8F5E9"),      # dark green text, light green bg
-    "PUT": ("#E65100", "#FFF3E0"),       # dark orange text, light orange bg
-    "DELETE": ("#C62828", "#FFEBEE"),    # dark red text, light red bg
+    "GET": ("#1565C0", "#E3F2FD"),
+    "POST": ("#2E7D32", "#E8F5E9"),
+    "PUT": ("#E65100", "#FFF3E0"),
+    "DELETE": ("#C62828", "#FFEBEE"),
 }
 
 STATUS_COLORS = {
-    200: ("#FFFFFF", "#2E7D32"),   # white text, green bg
-    201: ("#FFFFFF", "#1565C0"),   # white text, blue bg
-    404: ("#FFFFFF", "#C62828"),   # white text, red bg
+    200: ("#FFFFFF", "#2E7D32"),
+    201: ("#FFFFFF", "#1565C0"),
+    404: ("#FFFFFF", "#C62828"),
 }
 
 def draw_json(draw, data_lines, x, y, line_height):
     for line in data_lines:
         stripped = line.strip()
-        # structural brackets
         if stripped in ["{", "}", "[", "]", "},", "],"] or stripped.startswith("//"):
             draw.text((x + (len(line) - len(line.lstrip())) * 8, y), line, fill=TEXT_MUTED, font=font_regular)
         elif ":" in stripped:
@@ -53,10 +53,8 @@ def draw_json(draw, data_lines, x, y, line_height):
             key_part = parts[0].strip()
             val_part = parts[1].strip().rstrip(",")
             x_cur = x + indent * 8
-            # key
             draw.text((x_cur, y), key_part + ": ", fill=TEXT_KEY, font=font_regular)
             kw = draw.textlength(key_part + ": ", font=font_regular)
-            # value
             val_color = TEXT_STRING if val_part.startswith('"') else TEXT_NUMBER
             val_text = val_part + ("," if parts[1].strip().endswith(",") else "")
             draw.text((x_cur + kw, y), val_text, fill=val_color, font=font_regular)
@@ -90,21 +88,18 @@ def create_postman_card(title, method, url, status_code, status_text, req_body_l
     draw.rectangle([0, y, width, y + url_bar], fill=HEADER_BG)
     draw.line([0, y + url_bar, width, y + url_bar], fill=BORDER, width=1)
 
-    # Method badge
     m_text_col, m_bg_col = METHOD_COLORS.get(method, ("#000", "#eee"))
     badge_w = 72
     draw.rounded_rectangle([16, y + 9, 16 + badge_w, y + url_bar - 9], radius=4, fill=m_bg_col)
     draw.text((16 + 10, y + 14), method, fill=m_text_col, font=font_bold)
 
-    # URL input box
     draw.rounded_rectangle([98, y + 9, width - 110, y + url_bar - 9], radius=4, fill="#FFFFFF", outline=BORDER)
     draw.text((108, y + 14), url, fill=TEXT_DARK, font=font_regular)
 
-    # SEND button
     draw.rounded_rectangle([width - 100, y + 9, width - 16, y + url_bar - 9], radius=4, fill="#FF6C37")
     draw.text((width - 80, y + 14), "Send", fill="#FFFFFF", font=font_bold)
 
-    # ---- REQUEST BODY TAB (if any) ----
+    # ---- REQUEST BODY TAB ----
     y = top_bar + url_bar
     draw.rectangle([0, y, width, y + tab_bar], fill=HEADER_BG)
     draw.line([0, y + tab_bar, width, y + tab_bar], fill=BORDER, width=1)
@@ -140,12 +135,10 @@ def create_postman_card(title, method, url, status_code, status_text, req_body_l
 
     # ---- RESPONSE BODY ----
     draw.rectangle([0, y, width, y + resp_h], fill="#FFFFFF")
-    # line numbers
     for i in range(len(resp_lines) + 1):
         draw.text((8, y + 10 + i * line_height), str(i + 1), fill="#BDBDBD", font=font_small)
     draw_json(draw, resp_lines, 38, y + 10, line_height)
 
-    # bottom label
     boty = y + resp_h
     draw.rectangle([0, boty, width, boty + 28], fill=HEADER_BG)
     draw.line([0, boty, width, boty], fill=BORDER, width=1)
@@ -160,20 +153,20 @@ def create_postman_card(title, method, url, status_code, status_text, req_body_l
 # 1. GET /books/
 create_postman_card(
     "GET /books/  –  All Books",
-    "GET", "https://backend-development-fundamentals-la-cyan.vercel.app/books/", 200, "OK",
+    "GET", f"{BASE_URL}/books/", 200, "OK",
     None,
     [
         "[",
-        '  { "id": 1,  "title": "Atomic Habits",          "author": "James Clear",     "price": 499,  "pages": 320 },',
-        '  { "id": 2,  "title": "Deep Work",               "author": "Cal Newport",     "price": 450,  "pages": 304 },',
-        '  { "id": 3,  "title": "Python Crash Course",     "author": "Eric Matthes",    "price": 850,  "pages": 544 },',
-        '  { "id": 4,  "title": "Fluent Python",           "author": "Luciano Ramalho", "price": 1150, "pages": 792 },',
-        '  { "id": 5,  "title": "Operating System Concepts","author": "Peter B. Galvin","price": 990,  "pages": 976 },',
-        '  { "id": 6,  "title": "Computer Networking",     "author": "James Kurose",    "price": 1100, "pages": 864 },',
-        '  { "id": 7,  "title": "Learning SQL",            "author": "Alan Beaulieu",   "price": 550,  "pages": 380 },',
-        '  { "id": 8,  "title": "System Design Interview", "author": "Alex Xu",         "price": 1250, "pages": 300 },',
-        '  { "id": 9,  "title": "SICP",                    "author": "Harold Abelson",  "price": 1300, "pages": 657 },',
-        '  { "id": 10, "title": "Automate the Boring Stuff","author": "Al Sweigart",   "price": 680,  "pages": 504 }',
+        '  { "id": 1,  "title": "Atomic Habits",                                      "author": "James Clear",      "price": 499,  "pages": 320 },',
+        '  { "id": 2,  "title": "Deep Work",                                           "author": "Cal Newport",      "price": 450,  "pages": 304 },',
+        '  { "id": 3,  "title": "Python Crash Course",                                 "author": "Eric Matthes",     "price": 850,  "pages": 544 },',
+        '  { "id": 4,  "title": "Fluent Python",                                       "author": "Luciano Ramalho",  "price": 1150, "pages": 792 },',
+        '  { "id": 5,  "title": "Operating System Concepts",                           "author": "Peter B. Galvin",  "price": 990,  "pages": 976 },',
+        '  { "id": 6,  "title": "Computer Networking: A Top-Down Approach",            "author": "James Kurose",     "price": 1100, "pages": 864 },',
+        '  { "id": 7,  "title": "Learning SQL",                                        "author": "Alan Beaulieu",    "price": 550,  "pages": 380 },',
+        '  { "id": 8,  "title": "System Design Interview",                             "author": "Alex Xu",          "price": 1250, "pages": 300 },',
+        '  { "id": 9,  "title": "Structure and Interpretation of Computer Programs",   "author": "Harold Abelson",   "price": 1300, "pages": 657 },',
+        '  { "id": 10, "title": "Automate the Boring Stuff with Python",               "author": "Al Sweigart",      "price": 680,  "pages": 504 }',
         "]"
     ],
     "01_get_all_books.png"
@@ -182,26 +175,53 @@ create_postman_card(
 # 2. GET /books/1/
 create_postman_card(
     "GET /books/:bookId/  –  Single Book",
-    "GET", "https://backend-development-fundamentals-la-cyan.vercel.app/books/1/", 200, "OK",
+    "GET", f"{BASE_URL}/books/1/", 200, "OK",
     None,
-    ["{", '  "id": 1,', '  "title": "Atomic Habits",', '  "author": "James Clear",', '  "price": 499,', '  "pages": 320', "}"],
+    [
+        "{",
+        '  "id": 1,',
+        '  "title": "Atomic Habits",',
+        '  "author": "James Clear",',
+        '  "price": 499,',
+        '  "pages": 320',
+        "}"
+    ],
     "02_get_single_book.png"
 )
 
 # 3. POST /books/
 create_postman_card(
     "POST /books/  –  Add New Book",
-    "POST", "https://backend-development-fundamentals-la-cyan.vercel.app/books/", 201, "Created",
-    ["{", '  "title": "The Clean Coder",', '  "author": "Robert C. Martin",', '  "price": 620,', '  "pages": 256', "}"],
-    ["{", '  "newBookId": 11,', '  "message": "New Book Added Successfully"', "}"],
+    "POST", f"{BASE_URL}/books/", 201, "Created",
+    [
+        "{",
+        '  "title": "The Clean Coder",',
+        '  "author": "Robert C. Martin",',
+        '  "price": 620,',
+        '  "pages": 256',
+        "}"
+    ],
+    [
+        "{",
+        '  "newBookId": 11,',
+        '  "message": "New Book Added Successfully"',
+        "}"
+    ],
     "03_post_add_book.png"
 )
 
 # 4. PUT /books/1/
 create_postman_card(
     "PUT /books/:bookId/  –  Update Book",
-    "PUT", "https://backend-development-fundamentals-la-cyan.vercel.app/books/1/", 200, "OK",
-    ["{", '  "title": "Atomic Habits (Special Edition)",', '  "author": "James Clear",', '  "price": 599,', '  "pages": 320', "}"],
+    "PUT", f"{BASE_URL}/books/1/", 200, "OK",
+    [
+        "{",
+        '  "title": "Atomic Habits (Special Edition)",',
+        '  "author": "James Clear",',
+        '  "price": 599,',
+        '  "pages": 320',
+        "}"
+    ],
     ['"Book Record Updated Successfully"'],
     "04_put_update_book.png"
 )
@@ -209,7 +229,7 @@ create_postman_card(
 # 5. DELETE /books/11/
 create_postman_card(
     "DELETE /books/:bookId/  –  Delete Book",
-    "DELETE", "https://backend-development-fundamentals-la-cyan.vercel.app/books/11/", 200, "OK",
+    "DELETE", f"{BASE_URL}/books/11/", 200, "OK",
     None,
     ['"Book Record Removed Successfully"'],
     "05_delete_book.png"
@@ -218,7 +238,7 @@ create_postman_card(
 # 6. 404
 create_postman_card(
     "GET /books/999/  –  404 Not Found",
-    "GET", "https://backend-development-fundamentals-la-cyan.vercel.app/books/999/", 404, "Not Found",
+    "GET", f"{BASE_URL}/books/999/", 404, "Not Found",
     None,
     ['"Requested Book Not Found"'],
     "06_get_404_not_found.png"
@@ -231,12 +251,9 @@ def create_light_terminal():
     img = Image.new("RGB", (width, height), color="#FFFFFF")
     draw = ImageDraw.Draw(img)
 
-    # title bar
     draw.rectangle([0, 0, width, 38], fill="#EEEEEE")
     draw.line([0, 38, width, 38], fill=BORDER, width=1)
-    # traffic lights
     draw.ellipse([14, 11, 26, 23], fill="#FF5F56")
-    draw.ellipse([34, 11, 46, 23])
     draw.ellipse([34, 11, 46, 23], fill="#FFBD2E")
     draw.ellipse([54, 11, 66, 23], fill="#27C93F")
     draw.text((width // 2 - 100, 10), "sqlite3 books.db  –  Terminal", fill="#555", font=font_bold)
@@ -248,13 +265,13 @@ def create_light_terminal():
         ("sqlite> .mode column", "#212121"),
         ("sqlite> .headers on", "#212121"),
         ("sqlite> SELECT * FROM book LIMIT 5;", "#212121"),
-        ("id  title                     author           price  pages", "#757575"),
-        ("--  ------------------------  ---------------  -----  -----", "#BDBDBD"),
-        ("1   Atomic Habits             James Clear      499    320", "#212121"),
-        ("2   Deep Work                 Cal Newport      450    304", "#212121"),
-        ("3   Python Crash Course       Eric Matthes     850    544", "#212121"),
-        ("4   Fluent Python             Luciano Ramalho  1150   792", "#212121"),
-        ("5   Operating System Concepts Peter B. Galvin  990    976", "#212121"),
+        ("id  title                                              author           price  pages", "#757575"),
+        ("--  -------------------------------------------------  ---------------  -----  -----", "#BDBDBD"),
+        ("1   Atomic Habits                                      James Clear      499    320", "#212121"),
+        ("2   Deep Work                                          Cal Newport      450    304", "#212121"),
+        ("3   Python Crash Course                                Eric Matthes     850    544", "#212121"),
+        ("4   Fluent Python                                      Luciano Ramalho  1150   792", "#212121"),
+        ("5   Operating System Concepts                          Peter B. Galvin  990    976", "#212121"),
         ("sqlite> SELECT COUNT(*) AS total_books FROM book;", "#212121"),
         ("total_books", "#757575"),
         ("-----------", "#BDBDBD"),
@@ -271,4 +288,3 @@ def create_light_terminal():
     print("Generated 07_sqlite_cli_view.png")
 
 create_light_terminal()
-
