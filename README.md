@@ -3,7 +3,7 @@
 **Student Name:** VINOD KUMAR · **Registration Number:** 252U1R1184 · **Section:** CSE-2D(214)  
 **Course:** Backend Development Fundamentals (Year II Term II) · **Faculty:** SAI SIVA TEJA · **Institution:** Aurora Deemed to be University  
 **GitHub Repository:** [https://github.com/vinodkumar24-vk/Backend-development_Lab-2_Vinod](https://github.com/vinodkumar24-vk/Backend-development_Lab-2_Vinod)  
-**Live Link:** Not applicable *(SQLite uses a local file-based database; serverless platforms do not support persistent disk writes.)*
+**Live Link:** [https://backend-development-fundamentals-la-cyan.vercel.app/](https://backend-development-fundamentals-la-cyan.vercel.app/)
 
 ---
 

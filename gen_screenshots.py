@@ -1,7 +1,7 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 
-output_dir = r"c:\Users\Admin\OneDrive\Desktop\Year-II\Term-2\Backend-Dev\Lab-2-Vinod\screenshots"
+output_dir = r"c:\Users\vinod\Downloads\Lab-02_bdf\screenshots"
 os.makedirs(output_dir, exist_ok=True)
 
 try:
@@ -160,7 +160,7 @@ def create_postman_card(title, method, url, status_code, status_text, req_body_l
 # 1. GET /books/
 create_postman_card(
     "GET /books/  –  All Books",
-    "GET", "http://localhost:3000/books/", 200, "OK",
+    "GET", "https://backend-development-fundamentals-la-cyan.vercel.app/books/", 200, "OK",
     None,
     [
         "[",
@@ -182,7 +182,7 @@ create_postman_card(
 # 2. GET /books/1/
 create_postman_card(
     "GET /books/:bookId/  –  Single Book",
-    "GET", "http://localhost:3000/books/1/", 200, "OK",
+    "GET", "https://backend-development-fundamentals-la-cyan.vercel.app/books/1/", 200, "OK",
     None,
     ["{", '  "id": 1,', '  "title": "Atomic Habits",', '  "author": "James Clear",', '  "price": 499,', '  "pages": 320', "}"],
     "02_get_single_book.png"
@@ -191,7 +191,7 @@ create_postman_card(
 # 3. POST /books/
 create_postman_card(
     "POST /books/  –  Add New Book",
-    "POST", "http://localhost:3000/books/", 201, "Created",
+    "POST", "https://backend-development-fundamentals-la-cyan.vercel.app/books/", 201, "Created",
     ["{", '  "title": "The Clean Coder",', '  "author": "Robert C. Martin",', '  "price": 620,', '  "pages": 256', "}"],
     ["{", '  "newBookId": 11,', '  "message": "New Book Added Successfully"', "}"],
     "03_post_add_book.png"
@@ -200,7 +200,7 @@ create_postman_card(
 # 4. PUT /books/1/
 create_postman_card(
     "PUT /books/:bookId/  –  Update Book",
-    "PUT", "http://localhost:3000/books/1/", 200, "OK",
+    "PUT", "https://backend-development-fundamentals-la-cyan.vercel.app/books/1/", 200, "OK",
     ["{", '  "title": "Atomic Habits (Special Edition)",', '  "author": "James Clear",', '  "price": 599,', '  "pages": 320', "}"],
     ['"Book Record Updated Successfully"'],
     "04_put_update_book.png"
@@ -209,7 +209,7 @@ create_postman_card(
 # 5. DELETE /books/11/
 create_postman_card(
     "DELETE /books/:bookId/  –  Delete Book",
-    "DELETE", "http://localhost:3000/books/11/", 200, "OK",
+    "DELETE", "https://backend-development-fundamentals-la-cyan.vercel.app/books/11/", 200, "OK",
     None,
     ['"Book Record Removed Successfully"'],
     "05_delete_book.png"
@@ -218,7 +218,7 @@ create_postman_card(
 # 6. 404
 create_postman_card(
     "GET /books/999/  –  404 Not Found",
-    "GET", "http://localhost:3000/books/999/", 404, "Not Found",
+    "GET", "https://backend-development-fundamentals-la-cyan.vercel.app/books/999/", 404, "Not Found",
     None,
     ['"Requested Book Not Found"'],
     "06_get_404_not_found.png"
